@@ -1,5 +1,8 @@
 # Organisational monoculture at the deforestation frontier
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19369617.svg)](https://doi.org/10.5281/zenodo.19369617)
+
+
 **State legibility and institutional simplification in Misiones, Argentina**
 
 ## Overview
