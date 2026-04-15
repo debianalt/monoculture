@@ -1,9 +1,9 @@
 Era,N,N_forms,Shannon_H,Evenness,Dominant,Dominant_pct
-Pre-1990,2375,6,1.412,0.788,SRL,40.5
-Menem,3021,6,1.162,0.648,SRL,60.3
-Crisis,960,6,1.245,0.695,SRL,50.6
-N.Kirchner,2297,6,1.362,0.76,SRL,45.2
-C.Kirchner,2631,7,1.406,0.722,SRL,48.1
-Macri,855,7,1.645,0.846,SRL,42.9
-Fernandez,1351,7,1.75,0.899,SRL,26.3
-Milei,415,7,1.385,0.712,SAS,44.8
+Pre-1990,2387,6,1.41,0.79,SRL,40.3
+Menem,3026,6,1.16,0.65,SRL,60.2
+Crisis,963,6,1.25,0.70,SRL,50.5
+N.Kirchner,2311,7,1.37,0.76,SRL,45.0
+C.Kirchner,2702,7,1.41,0.73,SRL,47.3
+Macri,877,7,1.65,0.85,SRL,42.4
+Fernandez,1459,7,1.74,0.89,Coop,25.5
+Milei,444,7,1.44,0.74,SAS,43.9

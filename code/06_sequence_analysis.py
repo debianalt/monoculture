@@ -4,7 +4,7 @@
 Defines dominant organisational regime per department × era,
 then produces:
   Fig6 — Sequence index plot (17 departments × 8 eras)
-  Fig7 — Transition probability matrix + alluvial flows
+  Fig7 — Transition proportion matrix + alluvial flows
 """
 
 import warnings
@@ -104,7 +104,7 @@ def compute_transitions(seq):
         for i in range(len(vals) - 1):
             trans_counts[(vals[i], vals[i + 1])] += 1
 
-    # Transition probability matrix
+    # Transition proportion matrix
     states = REGIME_ORDER
     n_states = len(states)
     state_idx = {s: i for i, s in enumerate(states)}
@@ -166,24 +166,29 @@ def fig6_sequence_index(seq):
                 color = REGIME_COLORS.get(regime, "#cccccc")
                 hatch = REGIME_HATCHES.get(regime, "")
                 ax.barh(i, 1, left=j, height=0.85, color=color, hatch=hatch,
-                        edgecolor="#555555", linewidth=0.3)
+                        edgecolor="black", linewidth=0.3)
 
     ax.set_yticks(range(len(depts_sorted)))
-    ax.set_yticklabels(depts_sorted, fontsize=8)
+    ax.set_yticklabels(depts_sorted, fontsize=9.5)
     ax.set_xticks(np.arange(len(ERA_ORDER)) + 0.5)
-    ax.set_xticklabels(ERA_LABELS, fontsize=8, rotation=45, ha="right")
+    ax.set_xticklabels(ERA_LABELS, fontsize=9.5, rotation=45, ha="right")
     ax.set_xlim(0, len(ERA_ORDER))
     ax.set_ylim(-0.5, len(depts_sorted) - 0.5)
     ax.invert_yaxis()
 
-    # Legend below plot — well clear of x-axis labels
+    # Legend below plot — hatches visibles via hatch.linewidth temporal mayor
+    LEGEND_NAMES = {"Commercial": "Commercial", "Assoc": "Associations", "Coop": "Cooperatives",
+                    "Services": "Services", "SAS": "SAS", "None": "No creations"}
     legend_order = REGIME_ORDER + (["None"] if (seq.values == "None").any() else [])
-    handles = [mpatches.Patch(color=REGIME_COLORS[r], hatch=REGIME_HATCHES.get(r, ""),
-                              edgecolor="#555555", label="No creations" if r == "None" else r) for r in legend_order]
-    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.22),
-              ncol=len(legend_order), fontsize=7, framealpha=0.95, edgecolor="#ccc")
+    with plt.rc_context({"hatch.linewidth": 1.2}):
+        handles = [mpatches.Patch(facecolor=REGIME_COLORS[r], hatch=REGIME_HATCHES.get(r, ""),
+                                  edgecolor="black", linewidth=0.8,
+                                  label=LEGEND_NAMES.get(r, r)) for r in legend_order]
+        ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.30),
+                  ncol=len(legend_order), fontsize=8, framealpha=0.95, edgecolor="#ccc",
+                  handleheight=2.0, handlelength=3.2)
 
-    ax.set_xlabel("Political era")
+    ax.set_xlabel("Political era", fontsize=10)
     ax.set_ylabel("")
     plt.subplots_adjust(bottom=0.24)
 
@@ -201,25 +206,25 @@ def fig6_sequence_index(seq):
 def fig7_transitions(counts, probs, dwells):
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), gridspec_kw={"width_ratios": [1.2, 1]})
 
-    # A: Transition probability matrix
+    # A: Transition proportion matrix
     ax = axes[0]
     im = ax.imshow(probs, cmap="YlOrRd", vmin=0, vmax=0.7, aspect="auto")
     ax.set_xticks(range(len(REGIME_ORDER)))
     ax.set_yticks(range(len(REGIME_ORDER)))
-    ax.set_xticklabels(REGIME_ORDER, fontsize=8, rotation=45, ha="right")
-    ax.set_yticklabels(REGIME_ORDER, fontsize=8)
-    ax.set_xlabel("State at t+1")
-    ax.set_ylabel("State at t")
-    ax.text(-0.05, 1.08, "A", transform=ax.transAxes, fontsize=12, fontweight="bold", va="top")
+    ax.set_xticklabels(REGIME_ORDER, fontsize=11, rotation=45, ha="right")
+    ax.set_yticklabels(REGIME_ORDER, fontsize=11)
+    ax.set_xlabel("State at t+1", fontsize=12)
+    ax.set_ylabel("State at t", fontsize=12)
+    ax.text(-0.05, 1.08, "A", transform=ax.transAxes, fontsize=14, fontweight="bold", va="top")
 
     for i in range(len(REGIME_ORDER)):
         for j in range(len(REGIME_ORDER)):
             val = probs[i, j]
             if val > 0.03:
                 color = "white" if val > 0.4 else "black"
-                ax.text(j, i, f"{val:.2f}", ha="center", va="center", fontsize=9, color=color,
+                ax.text(j, i, f"{val:.2f}", ha="center", va="center", fontsize=12, color=color,
                         fontweight="bold" if i == j else "normal")
-    plt.colorbar(im, ax=ax, shrink=0.8, label="Transition probability")
+    plt.colorbar(im, ax=ax, shrink=0.8, label="Transition proportion")
 
     # B: Dwell times + persistence rates
     ax = axes[1]
@@ -234,16 +239,16 @@ def fig7_transitions(counts, probs, dwells):
     for bar, h in zip(bars, hatches):
         bar.set_hatch(h)
     ax.set_xticks(x)
-    ax.set_xticklabels(regimes, fontsize=8, rotation=45, ha="right")
-    ax.set_ylabel("Mean dwell time (eras)")
-    ax.text(-0.05, 1.08, "B", transform=ax.transAxes, fontsize=12, fontweight="bold", va="top")
+    ax.set_xticklabels(regimes, fontsize=11, rotation=45, ha="right")
+    ax.set_ylabel("Mean dwell time (eras)", fontsize=12)
+    ax.text(-0.05, 1.08, "B", transform=ax.transAxes, fontsize=14, fontweight="bold", va="top")
 
     # Annotate with persistence probability
     for i, bar in enumerate(bars):
         h = bar.get_height()
         ax.text(bar.get_x() + bar.get_width() / 2, h + 0.05,
                 f"p={persist[i]:.2f}\n({dwell_vals[i]:.1f} eras)",
-                ha="center", va="bottom", fontsize=7.5)
+                ha="center", va="bottom", fontsize=10)
 
     ax.set_ylim(0, max(dwell_vals) * 1.4)
 
