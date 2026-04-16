@@ -4,7 +4,7 @@
 Defines dominant organisational regime per department × era,
 then produces:
   Fig6 — Sequence index plot (17 departments × 8 eras)
-  Fig7 — Transition proportion matrix + alluvial flows
+  Fig7 — Transition probability matrix + alluvial flows
 """
 
 import warnings
@@ -34,28 +34,28 @@ plt.rcParams.update({
     "axes.spines.right": False,
     "savefig.dpi": DPI,
     "savefig.bbox": "tight",
-    "hatch.linewidth": 0.5,
+    "hatch.linewidth": 1.5,
 })
 
 ERA_ORDER = ["1.Pre1990", "2.Menem", "3.Crisis", "4.NK", "5.CK", "6.Macri", "7.Fern", "8.Milei"]
 ERA_LABELS = ["Pre-1990", "Menem\n1990-99", "Crisis\n2000-02", "N. Kirchner\n2003-07", "C. Kirchner\n2008-15", "Macri\n2016-19", "Fernández\n2020-23", "Milei\n2024-25"]
 
 REGIME_COLORS = {
-    "Commercial": "#ff7f00",
-    "Coop": "#4daf4a",
-    "Assoc": "#377eb8",
-    "Services": "#984ea3",
-    "SAS": "#e41a1c",
-    "None": "#cccccc",
+    "Commercial": "#E69F00",
+    "Coop": "#009E73",
+    "Assoc": "#56B4E9",
+    "Services": "#CC79A7",
+    "SAS": "#D55E00",
+    "None": "#CCCCCC",
 }
 REGIME_ORDER = ["Commercial", "Assoc", "Coop", "Services", "SAS"]
 
 REGIME_HATCHES = {
     "Commercial": "",
-    "Assoc": "//",
-    "Coop": "..",
-    "Services": "\\\\",
-    "SAS": "xx",
+    "Assoc": "///",
+    "Coop": "...",
+    "Services": "\\\\\\",
+    "SAS": "xxx",
     "None": "",
 }
 
@@ -104,7 +104,7 @@ def compute_transitions(seq):
         for i in range(len(vals) - 1):
             trans_counts[(vals[i], vals[i + 1])] += 1
 
-    # Transition proportion matrix
+    # Transition probability matrix
     states = REGIME_ORDER
     n_states = len(states)
     state_idx = {s: i for i, s in enumerate(states)}
@@ -157,7 +157,7 @@ def fig6_sequence_index(seq):
 
     depts_sorted = sorted(seq.index, key=coop_score, reverse=True)
 
-    fig, ax = plt.subplots(figsize=(8, 5.5))
+    fig, ax = plt.subplots(figsize=(8, 7.5))
 
     for i, dept in enumerate(depts_sorted):
         for j, era in enumerate(ERA_ORDER):
@@ -165,7 +165,7 @@ def fig6_sequence_index(seq):
                 regime = seq.loc[dept, era]
                 color = REGIME_COLORS.get(regime, "#cccccc")
                 hatch = REGIME_HATCHES.get(regime, "")
-                ax.barh(i, 1, left=j, height=0.85, color=color, hatch=hatch,
+                ax.barh(i, 1, left=j, height=0.68, color=color, hatch=hatch,
                         edgecolor="black", linewidth=0.3)
 
     ax.set_yticks(range(len(depts_sorted)))
@@ -178,25 +178,26 @@ def fig6_sequence_index(seq):
 
     # Legend below plot — hatches visibles via hatch.linewidth temporal mayor
     LEGEND_NAMES = {"Commercial": "Commercial", "Assoc": "Associations", "Coop": "Cooperatives",
-                    "Services": "Services", "SAS": "SAS", "None": "No creations"}
+                    "Services": "Inst. services", "SAS": "SAS", "None": "No creations"}
     legend_order = REGIME_ORDER + (["None"] if (seq.values == "None").any() else [])
     with plt.rc_context({"hatch.linewidth": 1.2}):
         handles = [mpatches.Patch(facecolor=REGIME_COLORS[r], hatch=REGIME_HATCHES.get(r, ""),
                                   edgecolor="black", linewidth=0.8,
                                   label=LEGEND_NAMES.get(r, r)) for r in legend_order]
-        ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.30),
+        ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.20),
                   ncol=len(legend_order), fontsize=8, framealpha=0.95, edgecolor="#ccc",
                   handleheight=2.0, handlelength=3.2)
 
     ax.set_xlabel("Political era", fontsize=10)
     ax.set_ylabel("")
-    plt.subplots_adjust(bottom=0.24)
+    plt.subplots_adjust(bottom=0.16)
 
     plt.savefig(FIG_DIR / "Fig6_sequences.tiff", dpi=DPI, format="tiff", pil_kwargs={"compression": "tiff_lzw"})
     plt.savefig(FIG_DIR / "Fig6_sequences.png", dpi=DPI)
-    plt.savefig(PROJECT / "figures" / "Fig2.png", dpi=DPI)
+    plt.savefig(PROJECT / "figures" / "Fig3.png", dpi=DPI)
+    plt.savefig(PROJECT / "figures" / "Fig3.tiff", dpi=DPI, format="tiff", pil_kwargs={"compression": "tiff_lzw"})
     plt.close()
-    print("  Fig6_sequences OK -> figures/Fig2.png", flush=True)
+    print("  Fig6_sequences OK -> figures/Fig3.png", flush=True)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -204,15 +205,17 @@ def fig6_sequence_index(seq):
 # ═════════════════════════════════════════════════════════════════════════════
 
 def fig7_transitions(counts, probs, dwells):
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), gridspec_kw={"width_ratios": [1.2, 1]})
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={"width_ratios": [1.2, 1]})
 
-    # A: Transition proportion matrix
+    # A: Transition probability matrix
     ax = axes[0]
     im = ax.imshow(probs, cmap="YlOrRd", vmin=0, vmax=0.7, aspect="auto")
     ax.set_xticks(range(len(REGIME_ORDER)))
     ax.set_yticks(range(len(REGIME_ORDER)))
-    ax.set_xticklabels(REGIME_ORDER, fontsize=11, rotation=45, ha="right")
-    ax.set_yticklabels(REGIME_ORDER, fontsize=11)
+    FULL_NAMES = {"Commercial": "Commercial", "Assoc": "Associations", "Coop": "Cooperatives",
+                  "Services": "Inst. services", "SAS": "SAS"}
+    ax.set_xticklabels([FULL_NAMES.get(r, r) for r in REGIME_ORDER], fontsize=11, rotation=45, ha="right")
+    ax.set_yticklabels([FULL_NAMES.get(r, r) for r in REGIME_ORDER], fontsize=11)
     ax.set_xlabel("State at t+1", fontsize=12)
     ax.set_ylabel("State at t", fontsize=12)
     ax.text(-0.05, 1.08, "A", transform=ax.transAxes, fontsize=14, fontweight="bold", va="top")
@@ -235,29 +238,32 @@ def fig7_transitions(counts, probs, dwells):
     colors = [REGIME_COLORS[r] for r in regimes]
 
     hatches = [REGIME_HATCHES.get(r, "") for r in regimes]
-    bars = ax.bar(x, dwell_vals, color=colors, alpha=0.85, edgecolor="#555555", linewidth=0.5)
+    bars = ax.bar(x, dwell_vals, color=colors, alpha=0.85, edgecolor="black", linewidth=0.5)
     for bar, h in zip(bars, hatches):
         bar.set_hatch(h)
     ax.set_xticks(x)
-    ax.set_xticklabels(regimes, fontsize=11, rotation=45, ha="right")
+    ax.set_xticklabels([FULL_NAMES.get(r, r) for r in regimes], fontsize=11, rotation=45, ha="right")
     ax.set_ylabel("Mean dwell time (eras)", fontsize=12)
     ax.text(-0.05, 1.08, "B", transform=ax.transAxes, fontsize=14, fontweight="bold", va="top")
 
-    # Annotate with persistence probability
+    # Annotate with persistence proportion
     for i, bar in enumerate(bars):
         h = bar.get_height()
+        label = f"\u03c0={persist[i]:.2f}\n({dwell_vals[i]:.1f} eras)"
+        if regimes[i] == "SAS":
+            label = f"\u03c0={persist[i]:.2f}*\n({dwell_vals[i]:.1f} eras)"
         ax.text(bar.get_x() + bar.get_width() / 2, h + 0.05,
-                f"p={persist[i]:.2f}\n({dwell_vals[i]:.1f} eras)",
-                ha="center", va="bottom", fontsize=10)
+                label, ha="center", va="bottom", fontsize=10)
 
     ax.set_ylim(0, max(dwell_vals) * 1.4)
 
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Fig7_transitions.tiff", dpi=DPI, format="tiff", pil_kwargs={"compression": "tiff_lzw"})
     plt.savefig(FIG_DIR / "Fig7_transitions.png", dpi=DPI)
-    plt.savefig(PROJECT / "figures" / "Fig3.png", dpi=DPI)
+    plt.savefig(PROJECT / "figures" / "Fig5.png", dpi=DPI)
+    plt.savefig(PROJECT / "figures" / "Fig5.tiff", dpi=DPI, format="tiff", pil_kwargs={"compression": "tiff_lzw"})
     plt.close()
-    print("  Fig7_transitions OK -> figures/Fig3.png", flush=True)
+    print("  Fig7_transitions OK -> figures/Fig5.png", flush=True)
 
 
 # ═════════════════════════════════════════════════════════════════════════════

@@ -51,9 +51,11 @@ Scripts are numbered in execution order:
 | `03_build_acm_dataset.py` | Build MCA input dataset (classification, era assignment) |
 | `04_run_acm.py` | Run MCA + Ward hierarchical clustering |
 | `05_temporal_analysis.py` | Compute era-level creation/mortality rates |
-| `06_sequence_analysis.py` | Sequence analysis, transition matrix, Figs 2–3 |
-| `07_figures.py` | Generate MCA biplot (Fig 1) |
-| `07b_publication_figures.py` | Additional publication-quality figures |
+| `06_sequence_analysis.py` | Sequence analysis, transition matrix (Fig. 3, Fig. 5) |
+| `08_regen_fig1.py` | MCA biplot (Fig. 2) |
+| `09_choropleth_map.py` | Choropleth small multiples — dominant cluster by department × era (Fig. 4) |
+| `10_sensitivity_analyses.py` | Sensitivity analyses (pre-Milei restriction, radio-level uniformity) |
+| `11_study_area_map.py` | Study area map — South America locator + regional detail (Fig. 1) |
 
 ## Supplementary materials
 
@@ -68,9 +70,12 @@ Scripts are numbered in execution order:
 
 | Figure | Description |
 |--------|-------------|
-| `Fig1_MCA_biplot.png` | MCA biplot of the organisational space (*N* = 13,905) |
-| `Fig2_sequence_index.png` | Sequence index plot (17 departments × 8 eras) |
-| `Fig3_transition_matrix.png` | Transition proportion matrix + dwell times |
+| `Fig1.png` | Study area: South America locator (Panel A) + regional detail with Misiones, UPAF, departments (Panel B) |
+| `Fig2.png` | MCA biplot of the organisational space (*N* = 13,905) |
+| `Fig3.png` | Sequence index plot (17 departments × 8 political eras) |
+| `Fig4.png` | Dominant organisational cluster by department across eight political eras |
+| `Fig5.png` | Transition proportion matrix + mean dwell times per cluster |
+| `FigS1.png` | Supplementary: choropleth (alias of Fig. 4) |
 
 ## Requirements
 
@@ -84,7 +89,7 @@ pip install -r requirements.txt
 
 If you use these data or code, please cite:
 
-> Gómez, R.E. (2026). Organisational monoculture at the deforestation frontier: state legibility and institutional simplification in Misiones, Argentina. *Sociologia Ruralis* [submitted]. Data and code: https://doi.org/10.5281/zenodo.19369617
+> Gómez, R.E. (2026). Organisational monoculture at the deforestation frontier: state legibility and institutional simplification in Misiones, Argentina. Data and code: https://doi.org/10.5281/zenodo.19369617
 
 ## License
 
