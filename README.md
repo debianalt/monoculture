@@ -2,10 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19369617.svg)](https://doi.org/10.5281/zenodo.19369617)
 
-
 **State legibility and institutional simplification in Misiones, Argentina**
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19369617.svg)](https://doi.org/10.5281/zenodo.19369617)
 
 ## Overview
 
@@ -52,6 +49,8 @@ Scripts are numbered in execution order:
 | `04_run_acm.py` | Run MCA + Ward hierarchical clustering |
 | `05_temporal_analysis.py` | Compute era-level creation/mortality rates |
 | `06_sequence_analysis.py` | Sequence analysis, transition matrix (Fig. 3, Fig. 5) |
+| `07_figures.py` | Exploratory figures |
+| `07b_publication_figures.py` | Publication-quality figures |
 | `08_regen_fig1.py` | MCA biplot (Fig. 2) |
 | `09_choropleth_map.py` | Choropleth small multiples — dominant cluster by department × era (Fig. 4) |
 | `10_sensitivity_analyses.py` | Sensitivity analyses (pre-Milei restriction, radio-level uniformity) |
