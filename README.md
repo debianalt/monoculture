@@ -4,6 +4,24 @@
 
 **State legibility and institutional simplification in Misiones, Argentina**
 
+> ⚠️ **Correction (2026-05): the "organisational monoculture" construct below is withdrawn.**
+> A pre-submission audit found the original analysis circular: political era
+> was entered as an *active* variable in the correspondence analysis, so the
+> principal axis was an axis of time and every latest-era organisation was
+> placed at the recent pole by construction. The "terminal convergence"
+> (17/17 departments, 180/180 radios), the SAS cluster, the sequence and
+> transition results, and the "114→1 collapse" headline are **artefacts of
+> that specification** and are not reproduced by a model-free re-analysis.
+> The study has been reconstructed as a modest, descriptive *contingency*
+> finding (the Kirchnerist cooperative surge was contingent on state
+> infrastructure and reverted to its long-run baseline on withdrawal; the
+> simplified joint-stock company diffused secularly; explicit null results
+> on spatial uniformity and on historic compression). The canonical analysis
+> is now `code/analysis_diversity.py`; the original pipeline and the
+> diagnostics establishing the circularity are in **[`archive/`](archive/README.md)**.
+> The text below describes the superseded version and is retained only for
+> the historical record and for the frozen Zenodo snapshot.
+
 ## Overview
 
 This repository contains the data, code, and supplementary materials for a study on the formal organisational landscape of the Argentine province of Misiones (1901–2025). The study introduces the concept of *organisational monoculture* to describe the reduction of institutional diversity to a single juridical form at agrarian frontiers, paralleling the ecological simplification that characterises frontier landscapes.
