@@ -1,48 +1,38 @@
-# Organisational monoculture at the deforestation frontier
+# The contingent cooperative
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19369617.svg)](https://doi.org/10.5281/zenodo.19369617)
 
-**State legibility and institutional simplification in Misiones, Argentina**
+**State infrastructure and the juridical-form composition of an Argentine agrarian frontier, 1983–2025**
 
-> ⚠️ **Correction (2026-05): the "organisational monoculture" construct below is withdrawn.**
-> A pre-submission audit found the original analysis circular: political era
-> was entered as an *active* variable in the correspondence analysis, so the
-> principal axis was an axis of time and every latest-era organisation was
-> placed at the recent pole by construction. The "terminal convergence"
-> (17/17 departments, 180/180 radios), the SAS cluster, the sequence and
-> transition results, and the "114→1 collapse" headline are **artefacts of
-> that specification** and are not reproduced by a model-free re-analysis.
-> The study has been reconstructed as a modest, descriptive *contingency*
-> finding (the Kirchnerist cooperative surge was contingent on state
-> infrastructure and reverted to its long-run baseline on withdrawal; the
-> simplified joint-stock company diffused secularly; explicit null results
-> on spatial uniformity and on historic compression). The canonical analysis
-> is now `code/analysis_diversity.py`; the original pipeline and the
-> diagnostics establishing the circularity are in **[`archive/`](archive/README.md)**.
-> The text below describes the superseded version and is retained only for
-> the historical record and for the frozen Zenodo snapshot.
+Raimundo Elías Gómez · María Gabriela Miño  
+CONICET / FHyCS-UNaM, Posadas, Argentina
+
+*Submitted to Journal of Rural Studies, June 2026.*
+
+---
 
 ## Overview
 
-This repository contains the data, code, and supplementary materials for a study on the formal organisational landscape of the Argentine province of Misiones (1901–2025). The study introduces the concept of *organisational monoculture* to describe the reduction of institutional diversity to a single juridical form at agrarian frontiers, paralleling the ecological simplification that characterises frontier landscapes.
+This repository contains the data, code, and supplementary materials for a study of the formal organisational landscape of the Argentine province of Misiones (1901–2025). The analysis assembles 14,169 dated formal organisations registered between 1901 and 2025 and characterises — with model-free, descriptive measures — how the juridical-form composition of new registrations tracks the legal and fiscal instruments of the eight national state projects since Argentina's return to democracy in 1983.
 
-Drawing on Scott's theory of state legibility, Bourdieu's theory of social space, and organisational ecology, the analysis assembles 13,905 formal organisations geocoded to 965 census radios and linked to 153 environmental variables. A Multiple Correspondence Analysis (MCA) maps the structure of the provincial organisational space, and a sequence analysis traces how eight political regimes restructured it.
+The central finding is a contingency asymmetry: fiscally self-sustaining commercial forms (most recently the *Sociedad por Acciones Simplificada*, SAS) diffuse secularly across state projects of opposed political orientation, whilst the cooperative, whose creation depends on a continuous social-economy apparatus, surges when that apparatus is sustained and reverts to its long-run baseline when it is withdrawn.
 
 ## Key findings
 
-- The organisational space aligns with the environmental gradient at the departmental level: cooperatives concentrate in forested frontier departments, commercial firms in the metropolitan pole.
-- Each political regime restructured the space through legal and fiscal instruments. The cooperative cluster fell from 114 creations per year to 1 following the withdrawal of registration support.
-- The cluster anchored by a single digitally registered commercial form (SAS), non-existent before 2017, now absorbs 215 creations per year across all 17 departments.
-- Organisational diversity at the frontier is not a natural endowment but a political product that requires active maintenance.
+- The SAS rose monotonically from 8.2% to 19.7% to 43.9% of new registrations across the Macri, Fernández, and Milei projects — a secular diffusion independent of any single project's programme.
+- Cooperative registration tracked the social-economy apparatus: 68–93 per year under the Kirchnerist and Fernández projects, reverting to 9 per year under Milei — identical to the Macri baseline.
+- The shift is neither spatially uniform (SAS modal in 46% of active census radios, within the permutation null) nor aligned with forest cover (*r* = 0.056, *N* = 17, unstable under jackknife).
+- Juridical-form diversity declined under the most recent project but remains above that of five of the eight projects.
 
 ## Repository structure
 
 ```
 monoculture/
   data/              Datasets (see data/README.md for dictionary)
-  code/              Analysis scripts (numbered in execution order)
-  figures/           Main figures (300 DPI, greyscale-compatible)
+  code/              Analysis scripts
+  figures/           Main figures (300 DPI)
   supplementary/     Supplementary tables (CSV)
+  archive/           Superseded MCA/sequence pipeline (see archive/README.md)
 ```
 
 ## Data
@@ -57,42 +47,33 @@ See `data/README.md` for the full data dictionary.
 
 ## Code
 
-Scripts are numbered in execution order:
-
 | Script | Description |
 |--------|-------------|
 | `01_enrich_base.py` | Enrich organisational registry with ARCA fiscal data |
 | `02_geocode_sociedades.py` | Geocode fiscal addresses via Nominatim + OSM |
-| `03_build_acm_dataset.py` | Build MCA input dataset (classification, era assignment) |
-| `04_run_acm.py` | Run MCA + Ward hierarchical clustering |
-| `05_temporal_analysis.py` | Compute era-level creation/mortality rates |
-| `06_sequence_analysis.py` | Sequence analysis, transition matrix (Fig. 3, Fig. 5) |
-| `07_figures.py` | Exploratory figures |
-| `07b_publication_figures.py` | Publication-quality figures |
-| `08_regen_fig1.py` | MCA biplot (Fig. 2) |
-| `09_choropleth_map.py` | Choropleth small multiples — dominant cluster by department × era (Fig. 4) |
-| `10_sensitivity_analyses.py` | Sensitivity analyses (pre-Milei restriction, radio-level uniformity) |
-| `11_study_area_map.py` | Study area map — South America locator + regional detail (Fig. 1) |
+| `03_build_acm_dataset.py` | Classify juridical forms and assign political eras |
+| `05_temporal_analysis.py` | Era-level creation rates and cooperative subtypes |
+| `analysis_diversity.py` | **Canonical analysis**: Shannon diversity, composition, sub-departmental dominance, permutation test |
+| `make_figures.py` | Publication figures (Fig2–Fig5) |
+
+Scripts in `archive/` contain the superseded MCA and sequence pipeline, retained with diagnostics establishing why that approach was abandoned (political era entered as active variable manufactures a spurious terminal convergence).
 
 ## Supplementary materials
 
 | Table | Description |
 |-------|-------------|
-| `Table_S1_eigenvalues.csv` | MCA eigenvalues (raw + Benzécri-corrected) |
-| `Table_S2_shannon_diversity.csv` | Shannon diversity index by political era |
-| `Table_S3_transition_counts.csv` | Transition count matrix (*N* per cell) |
-| `Table_S4_cluster_profiles.csv` | Cluster profiles summary |
+| `Table_S3_transition_counts.csv` | Transition count matrix |
+| `Table_S4_cluster_profiles.csv` | Cluster profiles (superseded analysis, retained for archival record) |
 
 ## Figures
 
 | Figure | Description |
 |--------|-------------|
-| `Fig1.png` | Study area: South America locator (Panel A) + regional detail with Misiones, UPAF, departments (Panel B) |
-| `Fig2.png` | MCA biplot of the organisational space (*N* = 13,905) |
-| `Fig3.png` | Sequence index plot (17 departments × 8 political eras) |
-| `Fig4.png` | Dominant organisational cluster by department across eight political eras |
-| `Fig5.png` | Transition proportion matrix + mean dwell times per cluster |
-| `FigS1.png` | Supplementary: choropleth (alias of Fig. 4) |
+| `Fig1.png` | Study area: South America locator (Panel A) + Misiones, UPAF ecoregion, departments (Panel B) |
+| `Fig2.png` | Juridical-form composition of new registrations by state project (1983–2025) |
+| `Fig3.png` | Annual Shannon diversity index of new registrations, 1990–2025 |
+| `Fig4.png` | Cooperative registrations per year by functional subtype across state projects |
+| `Fig5.png` | Modal-form share of active census radios by state project |
 
 ## Requirements
 
@@ -106,7 +87,7 @@ pip install -r requirements.txt
 
 If you use these data or code, please cite:
 
-> Gómez, R.E. (2026). Organisational monoculture at the deforestation frontier: state legibility and institutional simplification in Misiones, Argentina. Data and code: https://doi.org/10.5281/zenodo.19369617
+> Gómez, R.E. and Miño, M.G. (2026). The contingent cooperative: state infrastructure and the juridical-form composition of an Argentine agrarian frontier, 1983–2025. Data and code: https://doi.org/10.5281/zenodo.19369617
 
 ## License
 
