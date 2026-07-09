@@ -22,9 +22,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-PROJECT = Path(__file__).resolve().parents[2]
-TAB = PROJECT / "acm" / "tables"
-FIGS = PROJECT / "submission_JRS_active" / "figures"
+# Repository root: reads the canonical tables written by analysis_diversity.py
+# and writes the publication figures back into the deposit.
+REPO = Path(__file__).resolve().parents[1]
+TAB = REPO / "tables"
+FIGS = REPO / "figures"
 FIGS.mkdir(parents=True, exist_ok=True)
 
 plt.rcParams.update({
@@ -53,6 +55,7 @@ def _save(fig, name):
 
 
 def fig2_composition():
+    from matplotlib.lines import Line2D
     d = pd.read_csv(TAB / "tab_composition_era.csv").set_index("era").reindex(ERAS)
     x = np.arange(len(ERAS))
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
@@ -66,14 +69,16 @@ def fig2_composition():
     ax.set_ylim(0, 100)
     ax.set_xticks(x)
     ax.set_xticklabels(ERAS, rotation=30, ha="right")
-    ax.legend(ncol=4, loc="lower center", bbox_to_anchor=(0.5, 1.02),
-              frameon=False)
     ax2 = ax.twinx()
-    ax2.plot(x, d["total_per_yr"].values, "k-o", lw=1.3, ms=4,
-             label="New registrations / year")
+    ax2.plot(x, d["total_per_yr"].values, "k-o", lw=1.3, ms=4)
     ax2.set_ylabel("New registrations per year")
     ax2.set_ylim(0, max(d["total_per_yr"]) * 1.15)
-    ax2.legend(loc="upper right", frameon=False)
+    # Combined legend above chart: form bars + line handle
+    bar_handles, bar_labels = ax.get_legend_handles_labels()
+    line_handle = Line2D([0], [0], color="k", lw=1.3, marker="o", ms=4,
+                         label="New registrations / year")
+    ax.legend(handles=bar_handles + [line_handle],
+              ncol=4, loc="lower center", bbox_to_anchor=(0.5, 1.02), frameon=False)
     _save(fig, "Fig2.png")
 
 
