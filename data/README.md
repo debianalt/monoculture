@@ -2,7 +2,7 @@
 
 ## geocoded_sociedades.parquet
 
-Main organisational registry. 14,177 records geocoded from the Inspeccion General de Justicia (IGJ) registry of Misiones, Argentina.
+Main organisational registry. 14,177 records geocoded from the Misiones subset (by registered fiscal domicile) of the Registro Nacional de Sociedades, Argentina.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -22,7 +22,7 @@ Main organisational registry. 14,177 records geocoded from the Inspeccion Genera
 | `lon` | float | Longitude (WGS84) |
 | `osm_type` | str | Geocoding precision (street, locality, department) |
 
-**Source**: Inspeccion General de Justicia (IGJ), Argentine national company registry. Period: 1901-2025.
+**Source**: Registro Nacional de Sociedades, published by the Ministerio de Justicia on the Argentine national open-data portal (datos.gob.ar) and compiled from ARCA fiscal records; file `registro-nacional-sociedades-20260223.csv`, retrieved 23 February 2026. Filtered to `dom_fiscal_provincia == MISIONES` (14,278 unique CUITs of 3,050,044 national activity records). Period: 1901-2025.
 
 ## enriquecido_arca_v2.parquet
 
