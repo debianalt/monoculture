@@ -6,7 +6,7 @@ Fig2–Fig5 (Fig1 study-area map is generated separately). Consistent style
 across all figures per the manuscript figure conventions: identical fonts,
 a single form→colour map, identical state-project order and labels.
 
-Outputs → submission_JRS_active/figures/Fig{2,3,4,5}.png  (300 dpi)
+Outputs → <repo>/figures/Fig{2,3,4,5}.png  (300 dpi)
 """
 import sys
 from pathlib import Path
@@ -37,6 +37,10 @@ plt.rcParams.update({
 
 ERAS = ["Pre-1990", "Menem", "Crisis", "N.Kirchner", "C.Kirchner",
         "Macri", "Fernández", "Milei"]
+# Display labels: the CSV keys above are compact; axis ticks must read exactly
+# as the period names do in the manuscript tables.
+ERA_LABEL = {"N.Kirchner": "N. Kirchner", "C.Kirchner": "C. Kirchner"}
+ERA_TICKS = [ERA_LABEL.get(e, e) for e in ERAS]
 FORMS = ["SAS", "SRL", "SA", "Coop", "Asoc", "Fund", "Otra"]
 FORM_LABEL = {"SAS": "SAS", "SRL": "SRL", "SA": "SA", "Coop": "Cooperative",
               "Asoc": "Civil association", "Fund": "Foundation",
@@ -68,7 +72,7 @@ def fig2_composition():
     ax.set_ylabel("Share of new registrations (%)")
     ax.set_ylim(0, 100)
     ax.set_xticks(x)
-    ax.set_xticklabels(ERAS, rotation=30, ha="right")
+    ax.set_xticklabels(ERA_TICKS, rotation=30, ha="right")
     ax2 = ax.twinx()
     ax2.plot(x, d["total_per_yr"].values, "k-o", lw=1.3, ms=4)
     ax2.set_ylabel("New registrations per year")
@@ -110,7 +114,7 @@ def fig4_coop_subtypes():
     ax.bar(x + w, c["other_per_yr"], w, label="Residual", color="#7f7f7f")
     ax.set_ylabel("Cooperative registrations per year")
     ax.set_xticks(x)
-    ax.set_xticklabels(ERAS, rotation=30, ha="right")
+    ax.set_xticklabels(ERA_TICKS, rotation=30, ha="right")
     ax.legend(frameon=False)
     _save(fig, "Fig4.png")
 
@@ -121,24 +125,29 @@ def fig5_spatial():
     colors = [FORM_COLOR.get(f, "#333") for f in s["top_form"]]
     fig, ax = plt.subplots(figsize=(7.2, 4.0))
     ax.bar(x, s["top_form_radio_share_%"], color=colors, width=0.6)
-    for i, (f, v) in enumerate(zip(s["top_form"], s["top_form_radio_share_%"])):
-        ax.text(i, v + 1.5, f, ha="center", va="bottom", fontsize=7)
     # Milei permutation null band (mean 87.3 of 190 active radios -> %)
     mil_active = float(s.loc["Milei", "active_radios"])
     null_mean_pct = 87.3 / mil_active * 100
     null_p95_pct = 98.0 / mil_active * 100
     mi = list(ERAS).index("Milei")
+    # Bar labels use the same form names as the Fig. 2 legend. The Milei label
+    # clears the error-bar cap rather than sitting under it.
+    for i, (f, v) in enumerate(zip(s["top_form"], s["top_form_radio_share_%"])):
+        top = max(v, null_p95_pct) if i == mi else v
+        ax.text(i, top + 1.5, FORM_LABEL.get(f, f),
+                ha="center", va="bottom", fontsize=7)
     ax.errorbar([mi], [s.loc["Milei", "top_form_radio_share_%"]],
                 yerr=[[s.loc["Milei", "top_form_radio_share_%"] - null_mean_pct],
                       [null_p95_pct - s.loc["Milei", "top_form_radio_share_%"]]],
                 fmt="none", ecolor="black", capsize=4, lw=1.2)
+    # Point at the left edge of the error bar, so the arrow never crosses the label.
     ax.annotate("Milei permutation\nnull (mean, 95th pct)",
-                xy=(mi, null_mean_pct), xytext=(mi - 2.4, null_mean_pct + 14),
+                xy=(mi - 0.34, null_mean_pct), xytext=(mi - 2.9, null_mean_pct + 16),
                 fontsize=7, arrowprops=dict(arrowstyle="->", lw=0.7))
     ax.set_ylabel("Modal-form share of active census radios (%)")
     ax.set_ylim(0, 75)
     ax.set_xticks(x)
-    ax.set_xticklabels(ERAS, rotation=30, ha="right")
+    ax.set_xticklabels(ERA_TICKS, rotation=30, ha="right")
     _save(fig, "Fig5.png")
 
 

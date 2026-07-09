@@ -41,8 +41,9 @@ The deposit is self-contained: every script reads from `data/` and writes to `ta
 | File | Records | Description |
 |------|---------|-------------|
 | `geocoded_sociedades.parquet` | 14,177 | Geocoded organisational registry — Misiones subset of the *Registro Nacional de Sociedades* |
-| `enriquecido_arca_v2.parquet` | 14,278 queried | ARCA fiscal-status enrichment (6,652 with an active record) |
+| `enriquecido_arca_v2.parquet` | 14,278 queried | ARCA fiscal-status enrichment (6,652 with an active record). **Not used by the paper** — see note under Tables |
 | `lookup_localidad_departamento.csv` | 283 | Locality-to-department mapping |
+| `arg_gdp_growth.csv` | 65 | Argentina, annual growth of real GDP, 1961–2025 (World Bank, WDI series NY.GDP.MKTP.KD.ZG) |
 
 Source: *Registro Nacional de Sociedades*, published by the Argentine Ministry of Justice on the national open-data portal and compiled from ARCA fiscal records; retrieved 23 February 2026, filtered to organisations whose registered fiscal domicile lies in Misiones. See `data/README.md` for the full dictionary.
 
@@ -53,6 +54,7 @@ Source: *Registro Nacional de Sociedades*, published by the Argentine Ministry o
 | `01_enrich_base.py` | Enrich the organisational registry with ARCA fiscal data |
 | `02_geocode_sociedades.py` | Geocode fiscal addresses via Nominatim + OSM |
 | `analysis_diversity.py` | **Canonical analysis**: Shannon diversity with bootstrap intervals, composition with exact Poisson intervals, cooperative subtypes, sub-departmental dominance with a permutation null, and fiscal status by form and period |
+| `gdp_by_period.py` | Aggregates the national real-GDP growth series into the eight comparison periods (the macro-economic covariate of Section 6.1) |
 | `make_figures.py` | Publication figures (Fig2–Fig5) from the canonical tables |
 | `11_study_area_map.py` | Study-area map (Fig1) |
 
@@ -71,6 +73,21 @@ Written by `analysis_diversity.py` into `tables/`:
 | `tab_spatial_formlevel.csv` | Modal form per census radio and department, by period |
 | `tab_fiscal_status.csv` | Active federal tax record by juridical form and period of creation |
 | `tab_dept_env.csv` | Department-level cooperative share against mean canopy cover |
+
+Written by `gdp_by_period.py`:
+
+| File | Description |
+|------|-------------|
+| `tab_gdp_period.csv` | Mean and cumulative real-GDP growth per comparison period |
+
+`tab_fiscal_status.csv` and `enriquecido_arca_v2.parquet` are retained for
+completeness but **no longer support any claim in the paper**. The fiscal-status
+section was withdrawn: the 2024 INAES resolution it invoked (3208/2024) suspends
+an entity's *authorisation to operate*, which is a different register from the
+ARCA tax record the measure read; and the 291 undetermined cases are graded by
+cohort age (2.9 per cent of the pre-1990 cohort down to 0.0 per cent of the
+Milei cohort), which is the signature of an absent record rather than of the
+query failure they were attributed to.
 
 ## Figures
 

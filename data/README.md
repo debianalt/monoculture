@@ -35,7 +35,24 @@ Fiscal enrichment from ARCA (formerly AFIP), the Argentine federal tax authority
 | `iva_categoria` | str | IVA (VAT) registration category |
 | `actividad_principal` | str | Primary declared economic activity |
 
-**Source**: ARCA/AFIP fiscal system. Queried 2025.
+**Source**: ARCA/AFIP fiscal system. Queried 2025 — that is, *before* the
+registry snapshot of 23 February 2026 was retrieved, not after it. No claim in
+the paper rests on this file (see the note under Tables in the top-level README).
+
+## arg_gdp_growth.csv
+
+Argentina, annual growth of real gross domestic product, 1961–2025.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `year` | int | Calendar year |
+| `gdp_growth_pct` | float | Annual growth of real GDP, per cent |
+
+**Source**: World Bank, *World Development Indicators*, series
+NY.GDP.MKTP.KD.ZG, retrieved 9 July 2026. Exogenous to the registry and to the
+normative acts of Table 1; used only as the covariate against which the
+counter-cyclical account of cooperative entry is weighed. Aggregated by
+`code/gdp_by_period.py`.
 
 ## lookup_localidad_departamento.csv
 

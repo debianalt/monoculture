@@ -1,16 +1,20 @@
-# Numerically-critical packages are pinned exactly: the MCA SVD (prince) and
-# Ward linkage / silhouette (scipy, scikit-learn) are version-sensitive.
-# Under these pins, regenerating the organisational partition from raw matches
-# the frozen acm/data/org_cluster_assignments_v2.csv at ~99.4% of records, and
-# the headline spatial-uniformity claims (17/17 departments, 180/180 census
-# radios SAS-dominant under Milei) are invariant. See 04_run_acm.py and
-# 00b_phase0_position_checks.py.
-prince==0.16.5
-scikit-learn==1.7.2
-scipy==1.16.3
+# The paper's analysis (code/) needs only numpy, pandas and scipy. Versions are
+# pinned because the bootstrap and permutation nulls are seeded: under these
+# pins every table in tables/ regenerates bit-identically.
 numpy==2.3.5
 pandas==2.3.3
-# Presentation only (do not affect the partition):
+scipy==1.16.3            # exact Poisson intervals, via chi2
+# Optional: only 11_study_area_map.py and the dept-env table touch a database.
+# sqlalchemy>=2.0
+#
+# Figures only (affect no reported quantity):
 matplotlib>=3.7
-adjustText>=0.8
 Pillow>=9.0
+#
+# archive/ ONLY — the discarded correspondence-analysis and sequence pipeline.
+# Nothing in the paper is computed from it; see archive/README.md for why it
+# was abandoned (period of creation entered as an active variable makes the
+# principal axis an axis of time). Install these only to re-run the diagnostics.
+prince==0.16.5
+scikit-learn==1.7.2
+adjustText>=0.8
