@@ -85,8 +85,9 @@ def classify_tipo(t):
         return "Asoc"
     if "FUNDACION" in t:
         return "Fund"
-    if "MUTUAL" in t:
-        return "Mutual"
+    # Mutual societies fold into the residual class: the manuscript analyses
+    # seven juridical-form categories (§4.2, Appendix A), and mutuals are too
+    # few to stand as a class of their own (they are disclosed in §4.2).
     if "RESPONSABILIDAD LIMITADA" in t:
         return "SRL"
     if t == "SOCIEDAD ANONIMA":
@@ -190,11 +191,13 @@ def t_era(g):
             continue
         vc = s["form"].value_counts()
         H = shannon(vc.values)
-        S = int((vc > 0).sum())
         h_lo, h_hi = shannon_boot_ci(s["form"].values)
+        # Evenness normalises by the fixed maximum ln(S), S = 7 juridical-form
+        # categories (Appendix A.1) — not by the number of classes present,
+        # which would make J incomparable across periods.
         rows.append({"era": e, "n": len(s), "H": round(H, 4),
                      "H_lo95": round(h_lo, 4), "H_hi95": round(h_hi, 4),
-                     "evenness": round(H / np.log(S), 4) if S > 1 else np.nan,
+                     "evenness": round(H / np.log(len(FORMS)), 4),
                      "dominant_form": vc.index[0],
                      "dominant_share_%": round(vc.iloc[0] / len(s) * 100, 1)})
     t = pd.DataFrame(rows)
